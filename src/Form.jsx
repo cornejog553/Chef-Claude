@@ -1,18 +1,20 @@
 import { useState } from "react";
+import Recipe from './Recipe.jsx';
+import Ingredients from "./Ingredients.jsx";
 
 export default function Form(){
-    const [ingredients, setIngredients] = useState(["Chicken", "Oregano", "Tomatoes"]);
+    const [ingredients, setIngredients] = useState([]);
+    const [recipeShown, setRecipeShown] = useState(false);
 
-    function handleSubmit(event){
-        event.preventDefault();
-        const formData = new FormData(event.currentTarget);
-        console.log(formData.get("ingredients"));
-        setIngredients([...ingredients, formData.get("ingredients")]);
+    function handleSubmit(formData){
+        const newIngredient = formData.get("ingredients");
+        console.log(newIngredient);
+        setIngredients([...ingredients, newIngredient]);        
     }
 
     return(
         <>
-            <form onSubmit={handleSubmit} className="add-ingredient-form">
+            <form action={handleSubmit} className="add-ingredient-form">
                 <input 
                 type="text"
                 placeholder="e.g. Oregano"
@@ -20,11 +22,10 @@ export default function Form(){
                 name="ingredients"/>
                 <button>Add Ingredient</button>
             </form>
-            <ul>
-                {ingredients.map(ingredient => (
-                    <li>{ingredient}</li>
-                ))}
-            </ul>
+             
+                {ingredients.length > 0 && <Ingredients ingredients = {ingredients} setRecipeShown={setRecipeShown} />}
+            {recipeShown && <Recipe />}
+            
         </>
     )
 }
